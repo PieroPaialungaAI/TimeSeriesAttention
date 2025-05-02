@@ -9,4 +9,4 @@ def build_modified_sine_wave(X, frequency, amplitude):
 
 
 def modify_sine(sine_wave):
-    pass
+    

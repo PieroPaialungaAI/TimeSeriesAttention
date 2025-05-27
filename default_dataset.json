@@ -1,6 +1,12 @@
 {
     "num_points": 500,
     "normal_anomalous_ratio":0.5,
+    "min_loc": 0.0,
+    "max_loc": 0.9,
+    "step_loc": 0.01,
+    "min_length": 0.1,
+    "max_length": 0.5,
+    "step_length": 0.01,
     "output_folder": "/output",
     "picture_folder": "/pictures"
   }

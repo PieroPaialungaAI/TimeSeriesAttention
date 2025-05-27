@@ -1,14 +1,9 @@
-import numpy as np
+from data_utils import * 
+from constants import * 
+from utils import * 
 
-def build_sine_wave(X, frequency, amplitude):
-    return amplitude * np.sin(X/frequency)
+class Dataset():
+    def __init__(self, dataset_filepath = JSON_FILE_PATH):
+        self.data_json = load_json(dataset_filepath)
 
 
-def build_modified_sine_wave(X, frequency, amplitude, loc, length):
-    return modify_sine(build_sine_wave(X,frequency, amplitude), loc, length)
-
-
-def modify_sine(sine_wave, loc, length):
-    x_value = sine_wave[loc]
-    sine_wave[loc:loc+length] = x_value
-    return x_value

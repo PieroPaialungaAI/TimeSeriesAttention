@@ -1,0 +1,6 @@
+{
+    "num_points": 500,
+    "normal_anomalous_ratio":0.5,
+    "output_folder": "/output",
+    "picture_folder": "/pictures"
+  }

@@ -1,6 +1,8 @@
 from data_utils import * 
 from constants import * 
 from utils import * 
+from torch_data import SineWaveTorchDataset
+
 
 class Dataset():
     def __init__(self, dataset_filepath = JSON_FILE_PATH):
@@ -49,6 +51,10 @@ class Dataset():
         self.features_dict = {}
         for key in KEY_LIST:
             self.features_dict[key] = self.build_data_key_features(key)
+
+
+    def to_torch(self):
+        return SineWaveTorchDataset(self.X, self.Y)
         
 
 

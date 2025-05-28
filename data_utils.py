@@ -1,7 +1,7 @@
 import numpy as np
 
 def build_sine_wave(X, frequency, amplitude):
-    return amplitude * np.sin(X/frequency)
+    return amplitude * np.sin(X*frequency)
 
 
 def build_modified_sine_wave(X, frequency, amplitude, loc, length):

@@ -9,7 +9,8 @@ def build_modified_sine_wave(X, frequency, amplitude, loc, length):
 
 
 def modify_sine(sine_wave, loc, length):
+    new_sine_wave = sine_wave.copy()
     x_value = sine_wave[loc]
-    sine_wave[loc:loc+length] = x_value
-    return x_value
+    new_sine_wave[loc:loc+length] = x_value
+    return new_sine_wave
 

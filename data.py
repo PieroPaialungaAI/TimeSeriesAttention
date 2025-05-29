@@ -70,10 +70,48 @@ class Dataset():
             self.test_torch_data =  SineWaveTorchDataset(self.X_test, self.Y_test)
             if self.batch_size is None:
                 self.batch_size = DEFAULT_BATCH_SIZE
-            self.train_torch_data_loader = DataLoader(self.train_torch_data, batch_size = DEFAULT_BATCH_SIZE)
-            self.test_torch_data_loader = DataLoader(self.test_torch_data, batch_size = DEFAULT_BATCH_SIZE)
+            self.train_loader = DataLoader(self.train_torch_data, batch_size = DEFAULT_BATCH_SIZE)
+            self.test_loader = DataLoader(self.test_torch_data, batch_size = DEFAULT_BATCH_SIZE)
         
 
+    def train_val_test_split(self, val_size=0.1, test_size=0.2, torch_data=True, batch_size=None):
+        """
+        Splits the dataset into train, val, and test sets.
+        
+        Parameters:
+            val_size (float): Fraction of data to use for validation.
+            test_size (float): Fraction of data to use for testing.
+            torch_data (bool): Whether to return torch Dataset and DataLoader.
+            batch_size (int): Batch size for DataLoaders. Defaults to self.batch_size or DEFAULT_BATCH_SIZE.
+        """
+        if batch_size is not None:
+            self.batch_size = batch_size
+        if self.batch_size is None:
+            self.batch_size = DEFAULT_BATCH_SIZE
+
+        # Step 1: train + val vs test
+        X_trainval, X_test, Y_trainval, Y_test = train_test_split(
+            self.X, self.Y, test_size=test_size, random_state=42
+        )
+
+        # Step 2: train vs val
+        val_ratio_adjusted = val_size / (1 - test_size)  # rescale for remaining data
+        X_train, X_val, Y_train, Y_val = train_test_split(
+            X_trainval, Y_trainval, test_size=val_ratio_adjusted, random_state=42
+        )
+
+        # Save raw splits
+        self.X_train, self.X_val, self.X_test = X_train, X_val, X_test
+        self.Y_train, self.Y_val, self.Y_test = Y_train, Y_val, Y_test
+
+        if torch_data:
+            self.train_torch_data = SineWaveTorchDataset(X_train, Y_train)
+            self.val_torch_data   = SineWaveTorchDataset(X_val, Y_val)
+            self.test_torch_data  = SineWaveTorchDataset(X_test, Y_test)
+
+            self.train_loader = DataLoader(self.train_torch_data, batch_size=self.batch_size, shuffle=True)
+            self.val_loader   = DataLoader(self.val_torch_data, batch_size=self.batch_size, shuffle=False)
+            self.test_loader  = DataLoader(self.test_torch_data, batch_size=self.batch_size, shuffle=False)
 
 
 

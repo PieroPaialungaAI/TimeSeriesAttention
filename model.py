@@ -89,3 +89,24 @@ class AttentionModel(nn.Module):
         # Load best model
         self.load_state_dict(torch.load('best_model.pth'))
         print("Best model loaded.")
+
+
+
+    @classmethod
+    def load_model(cls, checkpoint_path, device='cpu', **kwargs):
+        """
+        Loads a trained AttentionModel.
+
+        Args:
+            checkpoint_path (str): Path to saved .pth file.
+            device (str): 'cpu' or 'cuda'.
+            kwargs: Keyword arguments for the model constructor (e.g., input_dim, hidden_dim)
+
+        Returns:
+            AttentionModel instance with weights loaded.
+        """
+        model = cls(**kwargs)
+        model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+        model.to(device)
+        model.eval()
+        return model

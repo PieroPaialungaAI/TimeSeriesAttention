@@ -2,12 +2,16 @@ from data_utils import *
 from constants import * 
 from utils import * 
 from torch_data import SineWaveTorchDataset
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
+
 
 
 class Dataset():
     def __init__(self, dataset_filepath = JSON_FILE_PATH):
         self.data_instruction = load_json(dataset_filepath)
         self.build_data()
+        self.batch_size = None
 
 
     def build_data(self):
@@ -53,8 +57,27 @@ class Dataset():
             self.features_dict[key] = self.build_data_key_features(key)
 
 
-    def to_torch(self):
-        return SineWaveTorchDataset(self.X, self.Y)
+    def to_torch(self, batch_size = 32):
+        self.torch_data = SineWaveTorchDataset(self.X, self.Y)
+        self.batch_size = batch_size
+        return self.torch_data
+    
+
+    def train_test_split(self, test_size = 0.2, torch_data = True):
+        self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X, self.Y, test_size=test_size, random_state=42)
+        if torch_data:
+            self.train_torch_data = SineWaveTorchDataset(self.X_train, self.Y_train)
+            self.test_torch_data =  SineWaveTorchDataset(self.X_test, self.Y_test)
+            if self.batch_size is None:
+                self.batch_size = DEFAULT_BATCH_SIZE
+            self.train_torch_data_loader = DataLoader(self.train_torch_data, batch_size = DEFAULT_BATCH_SIZE)
+            self.test_torch_data_loader = DataLoader(self.test_torch_data, batch_size = DEFAULT_BATCH_SIZE)
+        
+
+
+
+
+
         
 
 
